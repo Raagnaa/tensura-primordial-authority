@@ -1,0 +1,13 @@
+{
+  "itemGroup.authority": "Example Mod Tab",
+  "block.authority.example_block": "Example Block",
+  "item.authority.example_item": "Example Item",
+
+  "authority.configuration.title": "Tensura: Primordial Authority Configs",
+  "authority.configuration.section.authority.common.toml": "Tensura: Primordial Authority Configs",
+  "authority.configuration.section.authority.common.toml.title": "Tensura: Primordial Authority Configs",
+  "authority.configuration.items": "Item List",
+  "authority.configuration.logDirtBlock": "Log Dirt Block",
+  "authority.configuration.magicNumberIntroduction": "Magic Number Text",
+  "authority.configuration.magicNumber": "Magic Number"
+}

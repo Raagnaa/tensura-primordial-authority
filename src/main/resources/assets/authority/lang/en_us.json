@@ -9,5 +9,9 @@
   "authority.configuration.items": "Item List",
   "authority.configuration.logDirtBlock": "Log Dirt Block",
   "authority.configuration.magicNumberIntroduction": "Magic Number Text",
-  "authority.configuration.magicNumber": "Magic Number"
+  "authority.configuration.magicNumber": "Magic Number",
+  "authority.skill.example_basic": "Example Basic Skill",
+  "authority.skill.example_basic.description": "A small placeholder skill for learning how Tensura skills are registered.",
+  "authority.race.example_basic": "Example Basic Race",
+  "authority.race.example_basic.description": "A small placeholder race for learning how Tensura races are registered."
 }

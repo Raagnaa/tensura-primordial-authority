@@ -1,0 +1,242 @@
+IDEAS PARA EL ADDON DE TENSURA / MANASCORE
+==========================================
+
+Este archivo resume las ideas que preguntaste y como podrian organizarse
+en el addon. No es una implementacion, sino una guia para decidir que
+sistema crear primero.
+
+
+1. Sistema de corrupcion
+------------------------
+
+Idea:
+- El jugador tiene un valor de corrupcion.
+- La corrupcion sube al usar ciertas skills, entrar en zonas corruptas,
+  participar en eventos oscuros o usar poderes prohibidos.
+
+Posible estructura:
+- corruption/CorruptionStorage.java
+- corruption/CorruptionHelper.java
+- corruption/CorruptionEvents.java
+- config/CorruptionConfig.java
+
+Con ManasCore:
+- Se puede guardar como Storage de entidad usando
+  StorageEvents.REGISTER_ENTITY_STORAGE.
+- Se puede sincronizar al cliente con markDirty().
+- Se puede aumentar desde SkillEvents.ACTIVATE_SKILL o desde onPressed()
+  de una skill concreta.
+
+
+2. Barra de corrupcion en pantalla
+----------------------------------
+
+Idea:
+- Mostrar una barra HUD para que el jugador vea su corrupcion.
+
+Es posible:
+- ManasCore puede sincronizar el storage al cliente.
+- NeoForge puede dibujar una barra con RegisterGuiLayersEvent.
+
+Flujo:
+- Servidor: skill usada -> sube corrupcion -> markDirty().
+- ManasCore: sincroniza el dato.
+- Cliente: HUD lee el valor y dibuja la barra.
+
+Importante:
+- La logica debe cambiar datos en servidor.
+- El render de la barra debe estar en clases client-only.
+
+
+3. Sistema de voluntad
+----------------------
+
+Idea:
+- Ademas de corrupcion, el jugador tiene voluntad.
+- La voluntad puede subir por resistir corrupcion, sobrevivir situaciones
+  dificiles, purificar zonas o usar poderes de forma controlada.
+
+Diseno recomendado:
+- Usar un storage comun, por ejemplo SoulStateStorage.
+- Guardar dos valores:
+  - corruption
+  - willpower
+
+Ventaja:
+- Es facil comparar cual domina para evoluciones, efectos o eventos.
+
+
+4. Evoluciones dinamicas segun corrupcion o voluntad
+----------------------------------------------------
+
+Idea:
+- Una raza base puede evolucionar diferente segun los valores del jugador.
+
+Ejemplo:
+- Humano + corrupcion dominante -> Humano Corrompido.
+- Humano + voluntad dominante -> Humano Indomable.
+- Si ninguno domina -> ruta normal o neutral.
+
+Recomendacion:
+- No decidir por una diferencia pequena.
+- Usar un margen minimo, por ejemplo 20 puntos de diferencia.
+
+Ejemplo de regla:
+- Si corrupcion - voluntad >= 20: evolucion corrupta.
+- Si voluntad - corrupcion >= 20: evolucion indomable.
+- Si no: evolucion neutral.
+
+
+5. Eventos raros mundiales
+--------------------------
+
+Idea:
+- Eventos que afectan al mundo o servidor completo.
+
+Ejemplos:
+- Eclipse corrupto.
+- Lluvia de energia magica.
+- Invasion espiritual.
+- Noche de corrupcion.
+- Evento que aumenta corrupcion o voluntad.
+
+Con ManasCore:
+- Se puede usar StorageEvents.REGISTER_WORLD_STORAGE para guardar el estado
+  del evento en el mundo.
+
+Datos utiles:
+- eventoActivo
+- tipoEvento
+- ticksRestantes
+- intensidad
+
+Efectos posibles:
+- Aplicar darkness.
+- Aumentar corrupcion lentamente.
+- Spawnear particulas.
+- Enviar mensajes globales.
+- Mostrar una bossbar vanilla.
+
+
+6. Zonas con efectos unicos
+---------------------------
+
+Idea:
+- Areas del mundo con reglas especiales.
+
+Ejemplos:
+- Zona anti-skill.
+- Zona que da EP x1.5.
+- Zona corrupta.
+- Zona de purificacion.
+
+Datos de una zona:
+- tipo
+- dimension
+- centro
+- radio
+- activa
+
+Zona anti-skill:
+- Es bastante directa con ManasCore.
+- Se puede usar SkillEvents.ACTIVATE_SKILL para cancelar activaciones
+  si el jugador esta dentro de la zona.
+
+Zona EP x1.5:
+- Es posible, pero hay que revisar Tensura para ver donde se calcula
+  o se suma EP.
+- Si Tensura tiene evento/API de EP gain, se modifica ahi.
+- Si no existe, podria requerir mixin o integracion mas avanzada.
+
+
+7. Stats especiales por skill Ultimate
+--------------------------------------
+
+Idea:
+- Cada Ultimate Skill puede tener su propio sistema interno.
+
+Ejemplos de stats:
+- resonancia
+- dominio
+- corrupcion interna
+- sincronizacion
+- hambre
+- estabilidad
+
+Donde guardarlo:
+- Para un valor que pertenece a una skill especifica, se puede guardar en
+  el tag/NBT de ManasSkillInstance.
+
+Ejemplo conceptual:
+- Ultimate A tiene resonancia 40.
+- Ultimate B tiene corrupcion interna 80.
+
+Ventaja:
+- El progreso viaja con esa skill.
+- Permite desbloquear efectos por umbrales.
+
+
+8. Ultimate Skills con efectos desbloqueables
+---------------------------------------------
+
+Idea:
+- Una Ultimate tiene varios efectos, pero no todos estan disponibles al
+  principio.
+- Al usar la Ultimate, sube su stat interno.
+- Al llegar a ciertos valores, se desbloquean efectos nuevos.
+
+Ejemplo:
+- 0 puntos: modo basico.
+- 25 puntos: bonus pasivo.
+- 50 puntos: segundo modo activo.
+- 75 puntos: reduccion de coste.
+- 100 puntos: forma completa o evolucion de skill.
+
+Regla:
+- El stat sube al usar esa misma Ultimate.
+
+Importante:
+- Si se cambia el tag de ManasSkillInstance, luego conviene actualizar la
+  skill instance para guardar/sincronizar el cambio.
+
+
+9. Orden recomendado para aprender
+----------------------------------
+
+No conviene hacer todo a la vez.
+
+Orden sugerido:
+
+1. Crear una skill basica.
+2. Crear una raza basica.
+3. Crear un storage simple de corrupcion.
+4. Hacer que una skill aumente corrupcion.
+5. Mostrar corrupcion con logs.
+6. Crear una barra HUD.
+7. Agregar voluntad.
+8. Crear evolucion dinamica.
+9. Crear zona anti-skill.
+10. Investigar EP gain en Tensura para zonas x1.5.
+11. Crear evento mundial simple.
+12. Crear una Ultimate con stat interno.
+
+
+10. Idea central del addon
+--------------------------
+
+El addon podria girar alrededor de dos fuerzas:
+
+- Corrupcion: poder prohibido, riesgo, mutacion, rutas oscuras.
+- Voluntad: resistencia, control, estabilidad, rutas indomables.
+
+Estas fuerzas pueden afectar:
+- skills
+- razas
+- evoluciones
+- eventos mundiales
+- zonas especiales
+- HUD
+- Ultimate Skills
+
+La clave es empezar con una mecanica pequena y probarla antes de conectar
+todo el sistema.

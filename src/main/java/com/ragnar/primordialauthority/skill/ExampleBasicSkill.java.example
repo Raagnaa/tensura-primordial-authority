@@ -1,0 +1,26 @@
+package com.ragnar.primordialauthority.skill;
+
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.tensura.ability.skill.Skill;
+import net.minecraft.world.entity.LivingEntity;
+
+public class ExampleBasicSkill extends Skill {
+    public ExampleBasicSkill() {
+        super(SkillType.UNIQUE);
+    }
+
+    @Override
+    public int getModes(ManasSkillInstance instance) {
+        return 1;
+    }
+
+    @Override
+    public String getModeId(ManasSkillInstance instance, int mode) {
+        return mode == 0 ? "example_basic.activate" : super.getModeId(instance, mode);
+    }
+
+    @Override
+    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
+        this.addMasteryPoint(instance, entity);
+    }
+}

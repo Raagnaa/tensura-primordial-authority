@@ -1,0 +1,39 @@
+package com.ragnar.primordialauthority.skill.progression;
+
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import net.minecraft.nbt.CompoundTag;
+
+// Rename this file to UniqueSkillSystemHelper.java when you are ready.
+// This stores named systems like corruption, willpower, or void power per skill.
+public final class UniqueSkillSystemHelper {
+    private static final String SYSTEMS_KEY = "authority_unique_systems";
+
+    private UniqueSkillSystemHelper() {
+    }
+
+    public static int getValue(ManasSkillInstance instance, UniqueSkillSystem system) {
+        return systemsTag(instance).getInt(system.id());
+    }
+
+    public static void add(ManasSkillInstance instance, UniqueSkillSystem system, int amount) {
+        add(instance, system, amount, system.defaultMax());
+    }
+
+    public static void add(ManasSkillInstance instance, UniqueSkillSystem system, int amount, int maxValue) {
+        int next = Math.min(getValue(instance, system) + amount, maxValue);
+        systemsTag(instance).putInt(system.id(), next);
+    }
+
+    public static boolean has(ManasSkillInstance instance, UniqueSkillSystem system, int required) {
+        return getValue(instance, system) >= required;
+    }
+
+    private static CompoundTag systemsTag(ManasSkillInstance instance) {
+        CompoundTag tag = instance.getOrCreateTag();
+        if (!tag.contains(SYSTEMS_KEY)) {
+            tag.put(SYSTEMS_KEY, new CompoundTag());
+        }
+
+        return tag.getCompound(SYSTEMS_KEY);
+    }
+}

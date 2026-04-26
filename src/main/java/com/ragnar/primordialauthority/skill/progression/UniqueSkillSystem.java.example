@@ -1,0 +1,25 @@
+package com.ragnar.primordialauthority.skill.progression;
+
+// Rename this file to UniqueSkillSystem.java when you want named systems.
+// Add or remove entries to match your addon lore.
+public enum UniqueSkillSystem {
+    CORRUPTION("corruption", 100),
+    WILLPOWER("willpower", 100),
+    VOID_POWER("void_power", 100);
+
+    private final String id;
+    private final int defaultMax;
+
+    UniqueSkillSystem(String id, int defaultMax) {
+        this.id = id;
+        this.defaultMax = defaultMax;
+    }
+
+    public String id() {
+        return id;
+    }
+
+    public int defaultMax() {
+        return defaultMax;
+    }
+}

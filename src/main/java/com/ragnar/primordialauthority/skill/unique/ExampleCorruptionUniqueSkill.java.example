@@ -1,0 +1,30 @@
+package com.ragnar.primordialauthority.skill.unique;
+
+import com.ragnar.primordialauthority.skill.progression.UniqueSkillSystem;
+import com.ragnar.primordialauthority.skill.progression.UniqueSkillSystemHelper;
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.manascore.skill.api.SkillAPI;
+import io.github.manasmods.tensura.ability.skill.Skill;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+
+// Rename this file to ExampleCorruptionUniqueSkill.java when you are ready.
+// This shows a Unique Skill using its own named system: CORRUPTION.
+public class ExampleCorruptionUniqueSkill extends Skill {
+    private static final UniqueSkillSystem SYSTEM = UniqueSkillSystem.CORRUPTION;
+
+    public ExampleCorruptionUniqueSkill() {
+        super(SkillType.UNIQUE);
+    }
+
+    @Override
+    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
+        UniqueSkillSystemHelper.add(instance, SYSTEM, 1);
+
+        if (UniqueSkillSystemHelper.has(instance, SYSTEM, 50)) {
+            entity.sendSystemMessage(Component.literal("Corruption effect unlocked."));
+        }
+
+        SkillAPI.getSkillsFrom(entity).updateSkill(instance, true);
+    }
+}

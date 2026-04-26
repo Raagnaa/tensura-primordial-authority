@@ -1,0 +1,17 @@
+package com.ragnar.primordialauthority.race;
+
+import io.github.manasmods.tensura.race.template.DefaultRace;
+import io.github.manasmods.tensura.storage.Alignment;
+
+// Rename this file to ExampleBasicRace.java when your Tensura/ManasCore jars are available.
+// This is intentionally small: add requirements, evolutions, and intrinsic skills later.
+public class ExampleBasicRace extends DefaultRace {
+    public ExampleBasicRace() {
+        super(Difficulty.NORMAL);
+    }
+
+    @Override
+    public Alignment getAlignment() {
+        return Alignment.NEUTRAL;
+    }
+}

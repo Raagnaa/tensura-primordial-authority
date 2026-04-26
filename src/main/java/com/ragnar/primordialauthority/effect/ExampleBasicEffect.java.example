@@ -1,0 +1,12 @@
+package com.ragnar.primordialauthority.effect;
+
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+
+// Rename this file to ExampleBasicEffect.java when you are ready to add an effect.
+// Keep the first effect simple: category, color, then one hook if you need it.
+public class ExampleBasicEffect extends MobEffect {
+    public ExampleBasicEffect() {
+        super(MobEffectCategory.BENEFICIAL, 0x66CCFF);
+    }
+}

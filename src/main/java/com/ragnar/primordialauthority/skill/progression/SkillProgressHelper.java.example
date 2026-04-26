@@ -1,0 +1,36 @@
+package com.ragnar.primordialauthority.skill.progression;
+
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+
+// Rename this file to SkillProgressHelper.java when you are ready to use it.
+// This helper keeps the per-skill progress logic out of each skill class.
+public final class SkillProgressHelper {
+    private static final String PROGRESS_KEY = "authority_progress";
+    private static final String MAX_PROGRESS_KEY = "authority_max_progress";
+
+    private SkillProgressHelper() {
+    }
+
+    public static int getProgress(ManasSkillInstance instance) {
+        return instance.getOrCreateTag().getInt(PROGRESS_KEY);
+    }
+
+    public static int getMaxProgress(ManasSkillInstance instance, int fallback) {
+        return instance.getOrCreateTag().contains(MAX_PROGRESS_KEY)
+                ? instance.getOrCreateTag().getInt(MAX_PROGRESS_KEY)
+                : fallback;
+    }
+
+    public static void setMaxProgress(ManasSkillInstance instance, int maxProgress) {
+        instance.getOrCreateTag().putInt(MAX_PROGRESS_KEY, maxProgress);
+    }
+
+    public static void addProgress(ManasSkillInstance instance, int amount, int maxProgress) {
+        int next = Math.min(getProgress(instance) + amount, maxProgress);
+        instance.getOrCreateTag().putInt(PROGRESS_KEY, next);
+    }
+
+    public static boolean hasProgress(ManasSkillInstance instance, int required) {
+        return getProgress(instance) >= required;
+    }
+}

@@ -1,0 +1,1004 @@
+From bc60b629b2e262e832a992726d2b9226c7de943b Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sun, 26 Apr 2026 21:52:07 +0000
+Subject: [PATCH] Import addon template scaffolding
+
+---
+ README.md                                     | 55 +++++++++++-------
+ build.gradle                                  |  6 ++
+ docs/resources-template.md                    | 46 +++++++++++++++
+ .../TensuraPrimordialAuthority.java           |  3 +
+ .../config/ExampleCommonConfig.java.example   | 28 +++++++++
+ .../effect/ExampleBasicEffect.java.example    | 12 ++++
+ .../race/ExampleBasicRace.java.example        | 17 ++++++
+ .../registry/AuthorityConfigs.java            | 20 +++++++
+ .../registry/AuthorityEffects.java            | 16 ++++++
+ .../registry/AuthorityRaces.java              | 10 ++++
+ .../registry/AuthoritySkills.java             | 21 +++++++
+ .../registry/AuthorityTemplateRegistry.java   | 16 ++++++
+ .../registry/AuthorityZones.java              | 18 ++++++
+ .../skill/ExampleBasicSkill.java.example      | 27 +++++++++
+ .../ExampleSkillEvolutionHelper.java.example  | 21 +++++++
+ .../SkillProgressHelper.java.example          | 36 ++++++++++++
+ .../UniqueSkillSystem.java.example            | 25 ++++++++
+ .../UniqueSkillSystemHelper.java.example      | 39 +++++++++++++
+ .../ExampleProgressUltimateSkill.java.example | 38 +++++++++++++
+ .../ExampleCorruptionUniqueSkill.java.example | 30 ++++++++++
+ .../ExampleProgressUniqueSkill.java.example   | 46 +++++++++++++++
+ .../zone/SpecialZone.java.example             | 54 ++++++++++++++++++
+ .../zone/ZoneEvents.java.example              | 28 +++++++++
+ .../zone/ZoneHelper.java.example              | 21 +++++++
+ .../zone/ZoneStorage.java.example             | 57 +++++++++++++++++++
+ .../zone/ZoneType.java.example                | 29 ++++++++++
+ .../assets/authority/lang/en_us.json          | 15 +++++
+ .../templates/META-INF/neoforge.mods.toml     |  6 ++
+ 28 files changed, 721 insertions(+), 19 deletions(-)
+ create mode 100644 docs/resources-template.md
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/config/ExampleCommonConfig.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/effect/ExampleBasicEffect.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/race/ExampleBasicRace.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthorityConfigs.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthorityEffects.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthorityRaces.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthoritySkills.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthorityTemplateRegistry.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/registry/AuthorityZones.java
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/ExampleBasicSkill.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/progression/ExampleSkillEvolutionHelper.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/progression/SkillProgressHelper.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystem.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystemHelper.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/ultimate/ExampleProgressUltimateSkill.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleCorruptionUniqueSkill.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleProgressUniqueSkill.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/zone/SpecialZone.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/zone/ZoneEvents.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/zone/ZoneHelper.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/zone/ZoneStorage.java.example
+ create mode 100644 src/main/java/com/ragnar/primordialauthority/zone/ZoneType.java.example
+
+diff --git a/README.md b/README.md
+index b421122..bc20dc7 100644
+--- a/README.md
++++ b/README.md
+@@ -1,25 +1,42 @@
++# Tensura: Primordial Authority
+-Installation information
+-=======
++NeoForge 1.21.1 addon project for learning Tensura Reincarnated / ManasCore modding.
+-This template repository can be directly cloned to get you started with a new
+-mod. Simply create a new repository cloned from this one, by following the
+-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
++## Template entry points
+-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthorityTemplateRegistry.java`
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthoritySkills.java`
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthorityRaces.java`
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthorityEffects.java`
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthorityConfigs.java`
++- `src/main/java/com/ragnar/primordialauthority/registry/AuthorityZones.java`
+
+-If at any point you are missing libraries in your IDE, or you've run into problems you can
+-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything
+-{this does not affect your code} and then start the process again.
++## Example templates
+
+-Mapping Names:
+-============
+-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields
+-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
+-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
+-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
++The example files use `.java.example` so the project can still compile before
++Tensura/ManasCore jars are installed and before you are ready to activate a system.
+
+-Additional Resources:
+-==========
+-Community Documentation: https://docs.neoforged.net/
+-NeoForged Discord: https://discord.neoforged.net/
++- `skill/ExampleBasicSkill.java.example`
++- `skill/progression/*.java.example`
++- `skill/unique/*.java.example`
++- `skill/ultimate/*.java.example`
++- `race/ExampleBasicRace.java.example`
++- `effect/ExampleBasicEffect.java.example`
++- `config/ExampleCommonConfig.java.example`
++- `zone/*.java.example`
++
++## Suggested learning order
++
++1. Copy one `.java.example` file to `.java`.
++2. Register it in the matching `Authority*` registry class.
++3. Build and test before copying the next template.
++4. Keep each mechanic small until it works in game.
++
++## Dependencies
++
++Put local Tensura Reincarnated, ManasCore, and optional integration jars in `libs/`.
++
++## Resource guide
++
++See `docs/resources-template.md` for notes about language keys, tags, recipes,
++loot tables, textures, and models.
+diff --git a/build.gradle b/build.gradle
+index d50b48e..c4a21d0 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -28,6 +28,9 @@ sourceSets.main.resources {
+
+ repositories {
+     // Add here additional repositories if required by some of the dependencies below.
++    flatDir {
++        dir 'libs'
++    }
+ }
+
+ base {
+@@ -139,6 +142,9 @@ dependencies {
+     // For more info:
+     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+     // http://www.gradle.org/docs/current/userguide/dependency_management.html
++    // Put Tensura Reincarnated, ManasCore, and optional integration jars in ./libs.
++    compileOnly fileTree(dir: 'libs', include: '*.jar')
++    localRuntime fileTree(dir: 'libs', include: '*.jar')
+ }
+
+ // This block of code expands all declared replace properties in the specified resource targets.
+diff --git a/docs/resources-template.md b/docs/resources-template.md
+new file mode 100644
+index 0000000..2d99c4e
+--- /dev/null
++++ b/docs/resources-template.md
+@@ -0,0 +1,46 @@
++# Resources Template Guide
++
++This template does not add real gameplay resources yet. Use these notes when
++you create actual content.
++
++## Language keys
++
++Start from:
++
++```text
++src/main/resources/assets/authority/lang/en_us.json
++```
++
++Common keys you may add later:
++
++```json
++{
++  "authority.skill.your_skill": "Your Skill",
++  "authority.skill.your_skill.description": "Describe what the skill does.",
++  "effect.authority.your_effect": "Your Effect",
++  "authority.race.your_race": "Your Race",
++  "authority.race.your_race.description": "Describe the race."
++}
++```
++
++## Data resources
++
++Only create data files when a system needs them. Useful folders may include:
++
++```text
++src/main/resources/data/authority/tags/
++src/main/resources/data/authority/recipes/
++src/main/resources/data/authority/loot_table/
++```
++
++For ManasCore race tags, create them only after you have real race ids.
++
++## Client assets
++
++Only create textures/models when you add visible content such as items,
++blocks, icons, or custom UI.
++
++```text
++src/main/resources/assets/authority/textures/
++src/main/resources/assets/authority/models/
++```
+diff --git a/src/main/java/com/ragnar/primordialauthority/TensuraPrimordialAuthority.java b/src/main/java/com/ragnar/primordialauthority/TensuraPrimordialAuthority.java
+index 7bc0347..8739f20 100644
+--- a/src/main/java/com/ragnar/primordialauthority/TensuraPrimordialAuthority.java
++++ b/src/main/java/com/ragnar/primordialauthority/TensuraPrimordialAuthority.java
+@@ -2,6 +2,7 @@ package com.ragnar.primordialauthority;
+
+ import org.slf4j.Logger;
+
++import com.ragnar.primordialauthority.registry.AuthorityTemplateRegistry;
+ import com.mojang.logging.LogUtils;
+
+ import net.minecraft.core.registries.BuiltInRegistries;
+@@ -66,6 +67,8 @@ public class TensuraPrimordialAuthority {
+     // The constructor for the mod class is the first code that is run when your mod is loaded.
+     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
+     public TensuraPrimordialAuthority(IEventBus modEventBus, ModContainer modContainer) {
++        AuthorityTemplateRegistry.init(modEventBus);
++
+         // Register the commonSetup method for modloading
+         modEventBus.addListener(this::commonSetup);
+diff --git a/src/main/java/com/ragnar/primordialauthority/config/ExampleCommonConfig.java.example b/src/main/java/com/ragnar/primordialauthority/config/ExampleCommonConfig.java.example
+new file mode 100644
+index 0000000..b73b3d1
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/config/ExampleCommonConfig.java.example
+@@ -0,0 +1,28 @@
++package com.ragnar.primordialauthority.config;
++
++import io.github.manasmods.manascore.config.api.Config;
++import io.github.manasmods.manascore.config.api.Configurable;
++
++// Rename this file to ExampleCommonConfig.java when you are ready to add a ManasCore config.
++// Your mod already has a NeoForge Config.java; use this only for ManasCore-style configs.
++public class ExampleCommonConfig extends Config {
++    @Override
++    public String getFileName() {
++        return "authority/common";
++    }
++
++    @Override
++    public String getFolder() {
++        return "authority";
++    }
++
++    public final SkillSettings SkillSettings = new SkillSettings();
++
++    public static class SkillSettings {
++        @Configurable
++        public double exampleSkillCost = 100.0;
++
++        @Configurable
++        public int exampleSkillCooldown = 20;
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/effect/ExampleBasicEffect.java.example b/src/main/java/com/ragnar/primordialauthority/effect/ExampleBasicEffect.java.example
+new file mode 100644
+index 0000000..b889471
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/effect/ExampleBasicEffect.java.example
+@@ -0,0 +1,12 @@
++package com.ragnar.primordialauthority.effect;
++
++import net.minecraft.world.effect.MobEffect;
++import net.minecraft.world.effect.MobEffectCategory;
++
++// Rename this file to ExampleBasicEffect.java when you are ready to add an effect.
++// Keep the first effect simple: category, color, then one hook if you need it.
++public class ExampleBasicEffect extends MobEffect {
++    public ExampleBasicEffect() {
++        super(MobEffectCategory.BENEFICIAL, 0x66CCFF);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/race/ExampleBasicRace.java.example b/src/main/java/com/ragnar/primordialauthority/race/ExampleBasicRace.java.example
+new file mode 100644
+index 0000000..42b2559
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/race/ExampleBasicRace.java.example
+@@ -0,0 +1,17 @@
++package com.ragnar.primordialauthority.race;
++
++import io.github.manasmods.tensura.race.template.DefaultRace;
++import io.github.manasmods.tensura.storage.Alignment;
++
++// Rename this file to ExampleBasicRace.java when your Tensura/ManasCore jars are available.
++// This is intentionally small: add requirements, evolutions, and intrinsic skills later.
++public class ExampleBasicRace extends DefaultRace {
++    public ExampleBasicRace() {
++        super(Difficulty.NORMAL);
++    }
++
++    @Override
++    public Alignment getAlignment() {
++        return Alignment.NEUTRAL;
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthorityConfigs.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityConfigs.java
+new file mode 100644
+index 0000000..c405710
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityConfigs.java
+@@ -0,0 +1,20 @@
++package com.ragnar.primordialauthority.registry;
++
++public final class AuthorityConfigs {
++    private AuthorityConfigs() {
++    }
++
++    /*
++     * When you are ready to add ManasCore configs:
++     *
++     * import com.ragnar.primordialauthority.config.ExampleCommonConfig;
++     * import io.github.manasmods.manascore.config.ConfigRegistry;
++     *
++     * public static void init() {
++     *     ConfigRegistry.registerConfig(new ExampleCommonConfig());
++     * }
++     */
++    public static void init() {
++        // Register ManasCore config classes here after you create them.
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthorityEffects.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityEffects.java
+new file mode 100644
+index 0000000..56aa3a5
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityEffects.java
+@@ -0,0 +1,16 @@
++package com.ragnar.primordialauthority.registry;
++
++import net.neoforged.bus.api.IEventBus;
++
++public final class AuthorityEffects {
++    private AuthorityEffects() {
++    }
++
++    /*
++     * Copy effect/ExampleBasicEffect.java.example to .java when you are ready.
++     * Effects usually use a DeferredRegister and need the mod event bus here.
++     */
++    public static void init(IEventBus modEventBus) {
++        // Register effect DeferredRegisters here later.
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthorityRaces.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityRaces.java
+new file mode 100644
+index 0000000..2ea515d
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityRaces.java
+@@ -0,0 +1,10 @@
++package com.ragnar.primordialauthority.registry;
++
++public final class AuthorityRaces {
++    private AuthorityRaces() {
++    }
++
++    // Register ManasCore races here after copying a race template to .java.
++    public static void init() {
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthoritySkills.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthoritySkills.java
+new file mode 100644
+index 0000000..0d93e10
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthoritySkills.java
+@@ -0,0 +1,21 @@
++package com.ragnar.primordialauthority.registry;
++
++public final class AuthoritySkills {
++    private AuthoritySkills() {
++    }
++
++    /*
++     * Copy skill/*.java.example files to .java, then register them here.
++     *
++     * Example pattern:
++     *
++     * public static final RegistrySupplier<ManasSkill> EXAMPLE_BASIC =
++     *         SkillRegistry.SKILLS.register(
++     *                 ResourceLocation.fromNamespaceAndPath(TensuraPrimordialAuthority.MODID, "example_basic"),
++     *                 ExampleBasicSkill::new
++     *         );
++     */
++    public static void init() {
++        // Add ManasCore/Tensura skill registrations here.
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthorityTemplateRegistry.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityTemplateRegistry.java
+new file mode 100644
+index 0000000..603dfc3
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityTemplateRegistry.java
+@@ -0,0 +1,16 @@
++package com.ragnar.primordialauthority.registry;
++
++import net.neoforged.bus.api.IEventBus;
++
++public final class AuthorityTemplateRegistry {
++    private AuthorityTemplateRegistry() {
++    }
++
++    public static void init(IEventBus modEventBus) {
++        AuthoritySkills.init();
++        AuthorityRaces.init();
++        AuthorityEffects.init(modEventBus);
++        AuthorityConfigs.init();
++        AuthorityZones.init();
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/registry/AuthorityZones.java b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityZones.java
+new file mode 100644
+index 0000000..33afabe
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/registry/AuthorityZones.java
+@@ -0,0 +1,18 @@
++package com.ragnar.primordialauthority.registry;
++
++public final class AuthorityZones {
++    private AuthorityZones() {
++    }
++
++    /*
++     * When you are ready to enable special map zones:
++     *
++     * 1. Copy the files in com.ragnar.primordialauthority.zone from .java.example to .java.
++     * 2. Register ZoneStorage with StorageEvents.REGISTER_WORLD_STORAGE.
++     * 3. Call ZoneEvents.init().
++     * 4. Add commands or debug code to create the first zone.
++     */
++    public static void init() {
++        // Register zone storage/events here after copying the zone templates to .java files.
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/ExampleBasicSkill.java.example b/src/main/java/com/ragnar/primordialauthority/skill/ExampleBasicSkill.java.example
+new file mode 100644
+index 0000000..413b576
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/ExampleBasicSkill.java.example
+@@ -0,0 +1,27 @@
++package com.ragnar.primordialauthority.skill;
++
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import io.github.manasmods.tensura.ability.skill.Skill;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ExampleBasicSkill.java when your Tensura/ManasCore jars are available.
++public class ExampleBasicSkill extends Skill {
++    public ExampleBasicSkill() {
++        super(SkillType.UNIQUE);
++    }
++
++    @Override
++    public int getModes(ManasSkillInstance instance) {
++        return 1;
++    }
++
++    @Override
++    public String getModeId(ManasSkillInstance instance, int mode) {
++        return mode == 0 ? "example_basic.activate" : super.getModeId(instance, mode);
++    }
++
++    @Override
++    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
++        this.addMasteryPoint(instance, entity);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/progression/ExampleSkillEvolutionHelper.java.example b/src/main/java/com/ragnar/primordialauthority/skill/progression/ExampleSkillEvolutionHelper.java.example
+new file mode 100644
+index 0000000..9aabad6
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/progression/ExampleSkillEvolutionHelper.java.example
+@@ -0,0 +1,21 @@
++package com.ragnar.primordialauthority.skill.progression;
++
++import io.github.manasmods.manascore.skill.api.ManasSkill;
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import io.github.manasmods.manascore.skill.api.SkillAPI;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ExampleSkillEvolutionHelper.java when you are ready.
++// Use this for replacing a completed Unique Skill with its Ultimate version.
++public final class ExampleSkillEvolutionHelper {
++    private ExampleSkillEvolutionHelper() {
++    }
++
++    public static void replaceSkill(LivingEntity entity, ManasSkillInstance oldInstance, ManasSkill newSkill, int newMaxProgress) {
++        ManasSkillInstance newInstance = newSkill.createDefaultInstance();
++        SkillProgressHelper.setMaxProgress(newInstance, newMaxProgress);
++
++        SkillAPI.getSkillsFrom(entity).forgetSkill(oldInstance);
++        SkillAPI.getSkillsFrom(entity).learnSkill(newInstance);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/progression/SkillProgressHelper.java.example b/src/main/java/com/ragnar/primordialauthority/skill/progression/SkillProgressHelper.java.example
+new file mode 100644
+index 0000000..34e6c98
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/progression/SkillProgressHelper.java.example
+@@ -0,0 +1,36 @@
++package com.ragnar.primordialauthority.skill.progression;
++
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++
++// Rename this file to SkillProgressHelper.java when you are ready to use it.
++// This helper keeps per-skill progress logic out of each skill class.
++public final class SkillProgressHelper {
++    private static final String PROGRESS_KEY = "authority_progress";
++    private static final String MAX_PROGRESS_KEY = "authority_max_progress";
++
++    private SkillProgressHelper() {
++    }
++
++    public static int getProgress(ManasSkillInstance instance) {
++        return instance.getOrCreateTag().getInt(PROGRESS_KEY);
++    }
++
++    public static int getMaxProgress(ManasSkillInstance instance, int fallback) {
++        return instance.getOrCreateTag().contains(MAX_PROGRESS_KEY)
++                ? instance.getOrCreateTag().getInt(MAX_PROGRESS_KEY)
++                : fallback;
++    }
++
++    public static void setMaxProgress(ManasSkillInstance instance, int maxProgress) {
++        instance.getOrCreateTag().putInt(MAX_PROGRESS_KEY, maxProgress);
++    }
++
++    public static void addProgress(ManasSkillInstance instance, int amount, int maxProgress) {
++        int next = Math.min(getProgress(instance) + amount, maxProgress);
++        instance.getOrCreateTag().putInt(PROGRESS_KEY, next);
++    }
++
++    public static boolean hasProgress(ManasSkillInstance instance, int required) {
++        return getProgress(instance) >= required;
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystem.java.example b/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystem.java.example
+new file mode 100644
+index 0000000..43414b5
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystem.java.example
+@@ -0,0 +1,25 @@
++package com.ragnar.primordialauthority.skill.progression;
++
++// Rename this file to UniqueSkillSystem.java when you want named systems.
++// Add or remove entries to match your addon lore.
++public enum UniqueSkillSystem {
++    CORRUPTION("corruption", 100),
++    WILLPOWER("willpower", 100),
++    VOID_POWER("void_power", 100);
++
++    private final String id;
++    private final int defaultMax;
++
++    UniqueSkillSystem(String id, int defaultMax) {
++        this.id = id;
++        this.defaultMax = defaultMax;
++    }
++
++    public String id() {
++        return id;
++    }
++
++    public int defaultMax() {
++        return defaultMax;
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystemHelper.java.example b/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystemHelper.java.example
+new file mode 100644
+index 0000000..8aa02d7
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/progression/UniqueSkillSystemHelper.java.example
+@@ -0,0 +1,39 @@
++package com.ragnar.primordialauthority.skill.progression;
++
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import net.minecraft.nbt.CompoundTag;
++
++// Rename this file to UniqueSkillSystemHelper.java when you are ready.
++// This stores named systems like corruption, willpower, or void power per skill.
++public final class UniqueSkillSystemHelper {
++    private static final String SYSTEMS_KEY = "authority_unique_systems";
++
++    private UniqueSkillSystemHelper() {
++    }
++
++    public static int getValue(ManasSkillInstance instance, UniqueSkillSystem system) {
++        return systemsTag(instance).getInt(system.id());
++    }
++
++    public static void add(ManasSkillInstance instance, UniqueSkillSystem system, int amount) {
++        add(instance, system, amount, system.defaultMax());
++    }
++
++    public static void add(ManasSkillInstance instance, UniqueSkillSystem system, int amount, int maxValue) {
++        int next = Math.min(getValue(instance, system) + amount, maxValue);
++        systemsTag(instance).putInt(system.id(), next);
++    }
++
++    public static boolean has(ManasSkillInstance instance, UniqueSkillSystem system, int required) {
++        return getValue(instance, system) >= required;
++    }
++
++    private static CompoundTag systemsTag(ManasSkillInstance instance) {
++        CompoundTag tag = instance.getOrCreateTag();
++        if (!tag.contains(SYSTEMS_KEY)) {
++            tag.put(SYSTEMS_KEY, new CompoundTag());
++        }
++
++        return tag.getCompound(SYSTEMS_KEY);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/ultimate/ExampleProgressUltimateSkill.java.example b/src/main/java/com/ragnar/primordialauthority/skill/ultimate/ExampleProgressUltimateSkill.java.example
+new file mode 100644
+index 0000000..4ea4a69
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/ultimate/ExampleProgressUltimateSkill.java.example
+@@ -0,0 +1,38 @@
++package com.ragnar.primordialauthority.skill.ultimate;
++
++import com.ragnar.primordialauthority.skill.progression.SkillProgressHelper;
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import io.github.manasmods.manascore.skill.api.SkillAPI;
++import io.github.manasmods.tensura.ability.skill.Skill;
++import net.minecraft.world.entity.LivingEntity;
++
++// Copy this file to .java after you create the matching registry entry.
++// This is the second stage: bigger limit and stronger unlock thresholds.
++public class ExampleProgressUltimateSkill extends Skill {
++    public static final int MAX_PROGRESS = 250;
++
++    public ExampleProgressUltimateSkill() {
++        super(SkillType.ULTIMATE);
++    }
++
++    @Override
++    public int getModes(ManasSkillInstance instance) {
++        return SkillProgressHelper.hasProgress(instance, 125) ? 2 : 1;
++    }
++
++    @Override
++    public String getModeId(ManasSkillInstance instance, int mode) {
++        return mode == 1 ? "example_ultimate.complete_release" : "example_ultimate.release";
++    }
++
++    @Override
++    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
++        SkillProgressHelper.addProgress(instance, 2, MAX_PROGRESS);
++
++        if (SkillProgressHelper.hasProgress(instance, 200)) {
++            // Add the late ultimate effect here.
++        }
++
++        SkillAPI.getSkillsFrom(entity).updateSkill(instance, true);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleCorruptionUniqueSkill.java.example b/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleCorruptionUniqueSkill.java.example
+new file mode 100644
+index 0000000..739c1b4
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleCorruptionUniqueSkill.java.example
+@@ -0,0 +1,30 @@
++package com.ragnar.primordialauthority.skill.unique;
++
++import com.ragnar.primordialauthority.skill.progression.UniqueSkillSystem;
++import com.ragnar.primordialauthority.skill.progression.UniqueSkillSystemHelper;
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import io.github.manasmods.manascore.skill.api.SkillAPI;
++import io.github.manasmods.tensura.ability.skill.Skill;
++import net.minecraft.network.chat.Component;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ExampleCorruptionUniqueSkill.java when you are ready.
++// This shows a Unique Skill using its own named system: CORRUPTION.
++public class ExampleCorruptionUniqueSkill extends Skill {
++    private static final UniqueSkillSystem SYSTEM = UniqueSkillSystem.CORRUPTION;
++
++    public ExampleCorruptionUniqueSkill() {
++        super(SkillType.UNIQUE);
++    }
++
++    @Override
++    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
++        UniqueSkillSystemHelper.add(instance, SYSTEM, 1);
++
++        if (UniqueSkillSystemHelper.has(instance, SYSTEM, 50)) {
++            entity.sendSystemMessage(Component.literal("Corruption effect unlocked."));
++        }
++
++        SkillAPI.getSkillsFrom(entity).updateSkill(instance, true);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleProgressUniqueSkill.java.example b/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleProgressUniqueSkill.java.example
+new file mode 100644
+index 0000000..13b44e4
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/skill/unique/ExampleProgressUniqueSkill.java.example
+@@ -0,0 +1,46 @@
++package com.ragnar.primordialauthority.skill.unique;
++
++import com.ragnar.primordialauthority.skill.progression.SkillProgressHelper;
++import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
++import io.github.manasmods.tensura.ability.skill.Skill;
++import net.minecraft.network.chat.Component;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ExampleProgressUniqueSkill.java when you are ready.
++// Goal: a Unique Skill with its own progress bar from 0 to 100.
++public class ExampleProgressUniqueSkill extends Skill {
++    private static final int MAX_PROGRESS = 100;
++    private static final int FIRST_UNLOCK = 25;
++    private static final int SECOND_UNLOCK = 50;
++
++    public ExampleProgressUniqueSkill() {
++        super(SkillType.UNIQUE);
++    }
++
++    @Override
++    public int getModes(ManasSkillInstance instance) {
++        return SkillProgressHelper.hasProgress(instance, SECOND_UNLOCK) ? 2 : 1;
++    }
++
++    @Override
++    public String getModeId(ManasSkillInstance instance, int mode) {
++        return mode == 1 ? "example_progress_unique.advanced" : "example_progress_unique.basic";
++    }
++
++    @Override
++    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
++        if (mode == 1 && !SkillProgressHelper.hasProgress(instance, SECOND_UNLOCK)) {
++            entity.sendSystemMessage(Component.literal("This mode is not unlocked yet."));
++            return;
++        }
++
++        SkillProgressHelper.addProgress(instance, 1, MAX_PROGRESS);
++
++        if (SkillProgressHelper.hasProgress(instance, FIRST_UNLOCK)) {
++            this.addMasteryPoint(instance, entity);
++        }
++
++        // At MAX_PROGRESS, call your evolution helper later:
++        // ExampleSkillEvolutionHelper.tryEvolveToUltimate(entity, instance);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/zone/SpecialZone.java.example b/src/main/java/com/ragnar/primordialauthority/zone/SpecialZone.java.example
+new file mode 100644
+index 0000000..8882e05
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/zone/SpecialZone.java.example
+@@ -0,0 +1,54 @@
++package com.ragnar.primordialauthority.zone;
++
++import net.minecraft.core.BlockPos;
++import net.minecraft.nbt.CompoundTag;
++import net.minecraft.resources.ResourceKey;
++import net.minecraft.resources.ResourceLocation;
++import net.minecraft.world.level.Level;
++
++// Rename this file to SpecialZone.java when you are ready.
++public class SpecialZone {
++    private final ZoneType type;
++    private final ResourceKey<Level> dimension;
++    private final BlockPos center;
++    private final int radius;
++
++    public SpecialZone(ZoneType type, ResourceKey<Level> dimension, BlockPos center, int radius) {
++        this.type = type;
++        this.dimension = dimension;
++        this.center = center;
++        this.radius = radius;
++    }
++
++    public boolean contains(Level level, BlockPos pos) {
++        return level.dimension().equals(dimension) && center.distSqr(pos) <= radius * radius;
++    }
++
++    public ZoneType type() {
++        return type;
++    }
++
++    public CompoundTag save() {
++        CompoundTag tag = new CompoundTag();
++        tag.putString("type", type.id());
++        tag.putString("dimension", dimension.location().toString());
++        tag.putInt("x", center.getX());
++        tag.putInt("y", center.getY());
++        tag.putInt("z", center.getZ());
++        tag.putInt("radius", radius);
++        return tag;
++    }
++
++    public static SpecialZone load(CompoundTag tag) {
++        ResourceKey<Level> dimension = ResourceKey.create(
++                net.minecraft.core.registries.Registries.DIMENSION,
++                ResourceLocation.parse(tag.getString("dimension"))
++        );
++        return new SpecialZone(
++                ZoneType.byId(tag.getString("type")),
++                dimension,
++                new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")),
++                tag.getInt("radius")
++        );
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/zone/ZoneEvents.java.example b/src/main/java/com/ragnar/primordialauthority/zone/ZoneEvents.java.example
+new file mode 100644
+index 0000000..813ee41
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/zone/ZoneEvents.java.example
+@@ -0,0 +1,28 @@
++package com.ragnar.primordialauthority.zone;
++
++import dev.architectury.event.EventResult;
++import io.github.manasmods.manascore.skill.api.SkillEvents;
++import net.minecraft.network.chat.Component;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ZoneEvents.java after ZoneStorage and ZoneHelper are active.
++// This shows how a zone can affect skills. Add EP multipliers later after reviewing Tensura's EP API.
++public final class ZoneEvents {
++    private ZoneEvents() {
++    }
++
++    public static void init() {
++        SkillEvents.ACTIVATE_SKILL.register((skillInstance, owner, keyNumber, mode) -> {
++            if (isInAntiSkillZone(owner)) {
++                owner.sendSystemMessage(Component.literal("Skills are sealed in this area."));
++                return EventResult.interruptFalse();
++            }
++
++            return EventResult.pass();
++        });
++    }
++
++    private static boolean isInAntiSkillZone(LivingEntity entity) {
++        return ZoneHelper.isInZone(entity, ZoneType.ANTI_SKILL);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/zone/ZoneHelper.java.example b/src/main/java/com/ragnar/primordialauthority/zone/ZoneHelper.java.example
+new file mode 100644
+index 0000000..db6dd86
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/zone/ZoneHelper.java.example
+@@ -0,0 +1,21 @@
++package com.ragnar.primordialauthority.zone;
++
++import io.github.manasmods.manascore.storage.api.StorageHolder;
++import net.minecraft.world.entity.LivingEntity;
++
++// Rename this file to ZoneHelper.java after ZoneStorage.java is active.
++// Keep lookup logic here so events and skills stay small.
++public final class ZoneHelper {
++    private ZoneHelper() {
++    }
++
++    public static boolean isInZone(LivingEntity entity, ZoneType type) {
++        if (entity.level().isClientSide()) {
++            return false;
++        }
++
++        StorageHolder holder = (StorageHolder) entity.level();
++        ZoneStorage storage = holder.manasCore$getStorage(ZoneStorage.KEY);
++        return storage != null && storage.isInZone(entity, type);
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/zone/ZoneStorage.java.example b/src/main/java/com/ragnar/primordialauthority/zone/ZoneStorage.java.example
+new file mode 100644
+index 0000000..273c7e3
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/zone/ZoneStorage.java.example
+@@ -0,0 +1,57 @@
++package com.ragnar.primordialauthority.zone;
++
++import io.github.manasmods.manascore.storage.api.Storage;
++import io.github.manasmods.manascore.storage.api.StorageHolder;
++import io.github.manasmods.manascore.storage.api.StorageKey;
++import net.minecraft.nbt.CompoundTag;
++import net.minecraft.nbt.ListTag;
++import net.minecraft.nbt.Tag;
++
++import java.util.ArrayList;
++import java.util.List;
++
++// Rename this file to ZoneStorage.java when you are ready.
++// Store zones in world storage because zones belong to the level, not to one player.
++public class ZoneStorage extends Storage {
++    public static StorageKey<ZoneStorage> KEY;
++
++    private final List<SpecialZone> zones = new ArrayList<>();
++
++    public ZoneStorage(StorageHolder holder) {
++        super(holder);
++    }
++
++    public List<SpecialZone> zones() {
++        return zones;
++    }
++
++    public boolean isInZone(net.minecraft.world.entity.LivingEntity entity, ZoneType type) {
++        return zones.stream().anyMatch(zone -> zone.type() == type && zone.contains(entity.level(), entity.blockPosition()));
++    }
++
++    public void addZone(SpecialZone zone) {
++        zones.add(zone);
++        markDirty();
++    }
++
++    @Override
++    public void save(CompoundTag data) {
++        ListTag list = new ListTag();
++
++        for (SpecialZone zone : zones) {
++            list.add(zone.save());
++        }
++
++        data.put("zones", list);
++    }
++
++    @Override
++    public void load(CompoundTag data) {
++        zones.clear();
++        ListTag list = data.getList("zones", Tag.TAG_COMPOUND);
++
++        for (int i = 0; i < list.size(); i++) {
++            zones.add(SpecialZone.load(list.getCompound(i)));
++        }
++    }
++}
+diff --git a/src/main/java/com/ragnar/primordialauthority/zone/ZoneType.java.example b/src/main/java/com/ragnar/primordialauthority/zone/ZoneType.java.example
+new file mode 100644
+index 0000000..51a2060
+--- /dev/null
++++ b/src/main/java/com/ragnar/primordialauthority/zone/ZoneType.java.example
+@@ -0,0 +1,29 @@
++package com.ragnar.primordialauthority.zone;
++
++// Rename this file to ZoneType.java when you are ready.
++public enum ZoneType {
++    ANTI_SKILL("anti_skill"),
++    EP_BONUS("ep_bonus"),
++    CORRUPTED("corrupted"),
++    PURIFICATION("purification");
++
++    private final String id;
++
++    ZoneType(String id) {
++        this.id = id;
++    }
++
++    public String id() {
++        return id;
++    }
++
++    public static ZoneType byId(String id) {
++        for (ZoneType type : values()) {
++            if (type.id.equals(id)) {
++                return type;
++            }
++        }
++
++        return CORRUPTED;
++    }
++}
+diff --git a/src/main/resources/assets/authority/lang/en_us.json b/src/main/resources/assets/authority/lang/en_us.json
+index c7f4928..490524f 100644
+--- a/src/main/resources/assets/authority/lang/en_us.json
++++ b/src/main/resources/assets/authority/lang/en_us.json
+@@ -2,6 +2,21 @@
+   "itemGroup.authority": "Example Mod Tab",
+   "block.authority.example_block": "Example Block",
+   "item.authority.example_item": "Example Item",
++  "authority.skill.example_basic": "Example Basic Skill",
++  "authority.skill.example_basic.description": "A small placeholder skill for learning how Tensura skills are registered.",
++  "authority.skill.example_progress_unique": "Example Progress Unique",
++  "authority.skill.example_progress_unique.description": "A Unique Skill with its own internal progress system.",
++  "authority.skill.mode.example_progress_unique.basic": "Basic Release",
++  "authority.skill.mode.example_progress_unique.advanced": "Advanced Release",
++  "authority.skill.example_progress_ultimate": "Example Progress Ultimate",
++  "authority.skill.example_progress_ultimate.description": "An Ultimate Skill with a larger internal progress system.",
++  "authority.skill.mode.example_progress_ultimate.release": "Release",
++  "authority.skill.mode.example_progress_ultimate.complete_release": "Complete Release",
++  "authority.skill.example_corruption_unique": "Example Corruption Unique",
++  "authority.skill.example_corruption_unique.description": "A Unique Skill using a named corruption system.",
++  "authority.race.example_basic": "Example Basic Race",
++  "authority.race.example_basic.description": "A small placeholder race for learning how Tensura races are registered.",
++  "effect.authority.example_basic": "Example Basic Effect",
+
+   "authority.configuration.title": "Tensura: Primordial Authority Configs",
+   "authority.configuration.section.authority.common.toml": "Tensura: Primordial Authority Configs",
+diff --git a/src/main/templates/META-INF/neoforge.mods.toml b/src/main/templates/META-INF/neoforge.mods.toml
+index 01b7d04..4e21455 100644
+--- a/src/main/templates/META-INF/neoforge.mods.toml
++++ b/src/main/templates/META-INF/neoforge.mods.toml
+@@ -88,6 +88,12 @@ config="${mod_id}.mixins.json"
+     ordering="NONE"
+     side="BOTH"
+
++[[dependencies.${mod_id}]]
++    modId="tensura"
++    type="required"
++    ordering="AFTER"
++    side="BOTH"
++
+ # Features are specific properties of the game environment, that you may want to declare you require. This example declares
+ # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
+ # stop your mod loading on the server for example.
+--
+2.43.0

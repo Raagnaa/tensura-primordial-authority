@@ -1,0 +1,46 @@
+package com.ragnar.primordialauthority.skill.unique;
+
+import com.ragnar.primordialauthority.skill.progression.SkillProgressHelper;
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.tensura.ability.skill.Skill;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+
+// Rename this file to ExampleProgressUniqueSkill.java when you are ready.
+// Goal: a Unique Skill with its own progress bar from 0 to 100.
+public class ExampleProgressUniqueSkill extends Skill {
+    private static final int MAX_PROGRESS = 100;
+    private static final int FIRST_UNLOCK = 25;
+    private static final int SECOND_UNLOCK = 50;
+
+    public ExampleProgressUniqueSkill() {
+        super(SkillType.UNIQUE);
+    }
+
+    @Override
+    public int getModes(ManasSkillInstance instance) {
+        return SkillProgressHelper.hasProgress(instance, SECOND_UNLOCK) ? 2 : 1;
+    }
+
+    @Override
+    public String getModeId(ManasSkillInstance instance, int mode) {
+        return mode == 1 ? "example_progress_unique.advanced" : "example_progress_unique.basic";
+    }
+
+    @Override
+    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
+        if (mode == 1 && !SkillProgressHelper.hasProgress(instance, SECOND_UNLOCK)) {
+            entity.sendSystemMessage(Component.literal("This mode is not unlocked yet."));
+            return;
+        }
+
+        SkillProgressHelper.addProgress(instance, 1, MAX_PROGRESS);
+
+        if (SkillProgressHelper.hasProgress(instance, FIRST_UNLOCK)) {
+            this.addMasteryPoint(instance, entity);
+        }
+
+        // At MAX_PROGRESS, call your evolution helper later:
+        // ExampleSkillEvolutionHelper.tryEvolveToUltimate(entity, instance);
+    }
+}

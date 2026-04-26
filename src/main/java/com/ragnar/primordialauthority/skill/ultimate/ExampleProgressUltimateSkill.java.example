@@ -1,0 +1,38 @@
+package com.ragnar.primordialauthority.skill.ultimate;
+
+import com.ragnar.primordialauthority.skill.progression.SkillProgressHelper;
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.manascore.skill.api.SkillAPI;
+import io.github.manasmods.tensura.ability.skill.Skill;
+import net.minecraft.world.entity.LivingEntity;
+
+// Copy this file to .java after you create the matching registry entry.
+// This is the second stage: bigger limit and stronger unlock thresholds.
+public class ExampleProgressUltimateSkill extends Skill {
+    public static final int MAX_PROGRESS = 250;
+
+    public ExampleProgressUltimateSkill() {
+        super(SkillType.ULTIMATE);
+    }
+
+    @Override
+    public int getModes(ManasSkillInstance instance) {
+        return SkillProgressHelper.hasProgress(instance, 125) ? 2 : 1;
+    }
+
+    @Override
+    public String getModeId(ManasSkillInstance instance, int mode) {
+        return mode == 1 ? "example_ultimate.complete_release" : "example_ultimate.release";
+    }
+
+    @Override
+    public void onPressed(ManasSkillInstance instance, LivingEntity entity, int keyNumber, int mode) {
+        SkillProgressHelper.addProgress(instance, 2, MAX_PROGRESS);
+
+        if (SkillProgressHelper.hasProgress(instance, 200)) {
+            // Add the late ultimate effect here.
+        }
+
+        SkillAPI.getSkillsFrom(entity).updateSkill(instance, true);
+    }
+}

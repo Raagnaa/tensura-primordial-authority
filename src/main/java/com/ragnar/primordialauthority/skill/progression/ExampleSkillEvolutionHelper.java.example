@@ -1,0 +1,21 @@
+package com.ragnar.primordialauthority.skill.progression;
+
+import io.github.manasmods.manascore.skill.api.ManasSkill;
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.manascore.skill.api.SkillAPI;
+import net.minecraft.world.entity.LivingEntity;
+
+// Rename this file to ExampleSkillEvolutionHelper.java when you are ready.
+// Keep this as a separate helper so Unique skills do not become huge classes.
+public final class ExampleSkillEvolutionHelper {
+    private ExampleSkillEvolutionHelper() {
+    }
+
+    public static void replaceSkill(LivingEntity entity, ManasSkillInstance oldInstance, ManasSkill newSkill, int newMaxProgress) {
+        ManasSkillInstance newInstance = newSkill.createDefaultInstance();
+        SkillProgressHelper.setMaxProgress(newInstance, newMaxProgress);
+
+        SkillAPI.getSkillsFrom(entity).forgetSkill(oldInstance);
+        SkillAPI.getSkillsFrom(entity).learnSkill(newInstance);
+    }
+}

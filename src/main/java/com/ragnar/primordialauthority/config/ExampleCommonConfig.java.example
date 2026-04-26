@@ -1,0 +1,28 @@
+package com.ragnar.primordialauthority.config;
+
+import io.github.manasmods.manascore.config.api.Config;
+import io.github.manasmods.manascore.config.api.Configurable;
+
+// Rename this file to ExampleCommonConfig.java when you are ready to add a real config.
+// Keep early configs small: one section, one or two values, then test that the file saves.
+public class ExampleCommonConfig extends Config {
+    @Override
+    public String getFileName() {
+        return "authority-common";
+    }
+
+    @Override
+    public String getFolder() {
+        return "authority";
+    }
+
+    public final SkillSettings SkillSettings = new SkillSettings();
+
+    public static class SkillSettings {
+        @Configurable
+        public double exampleSkillCost = 100.0;
+
+        @Configurable
+        public int exampleSkillCooldown = 20;
+    }
+}
